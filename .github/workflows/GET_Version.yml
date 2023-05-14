@@ -19,7 +19,7 @@ jobs:
       
       - name: Get OpenSSL Version
         run: |
-          OPENSSL_LATEST_VERSION=$(curl -k -s https://api.prprpr.dev/version/latest/openssl | jq .data.version | sed s/\"//g)
+          OPENSSL_LATEST_VERSION=$(curl -k -s https://api.rua.dev/version/latest/openssl | jq .data.version | sed s/\"//g)
           echo $OPENSSL_LATEST_VERSION
           if [ ! -f "./OPENSSL" ]; then
             touch ./OPENSSL
