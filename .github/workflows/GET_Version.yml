@@ -1,0 +1,35 @@
+name: GET Version
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Installing Dependencies
+        run: |
+          sudo apt-get install -y jq curl git
+      
+      - name: Get OpenSSL Version
+        run: |
+          OPENSSL_LATEST_VERSION=$(curl -k -s https://api.prprpr.dev/version/latest/openssl | jq .data.version | sed s/\"//g)
+          echo $OPENSSL_LATEST_VERSION
+          if [ ! -f "./OPENSSL" ]; then
+            touch ./OPENSSL
+          fi
+          OPENSSL_LOCAL_VERSION=$(cat ./OPENSSL)
+          if [  "$OPENSSL_LATEST_VERSION" != "$OPENSSL_LOCAL_VERSION" ]; then
+            echo $OPENSSL_LATEST_VERSION > ./OPENSSL
+            git add ./OPENSSL
+            git commit -m "Updated OPENSSL at $(date)" -a
+            git push
+          fi
+          
+    
