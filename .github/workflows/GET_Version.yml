@@ -33,5 +33,20 @@ jobs:
             git commit -m "Updated OPENSSL at $(date)" -a
             git push
           fi
+
+      - name: Get Alpine Version
+        run: |
+          ALPINELINUX_LATEST_VERSION=$(curl -k -s https://api.rua.dev/versions/latest/alpine | jq .data.version | sed s/\"//g)
+          echo $ALPINELINUX_LATEST_VERSION
+          if [ ! -f "./ALPINELINUX" ]; then
+            touch ./ALPINELINUX
+          fi
+          ALPINELINUX_LOCAL_VERSION=$(cat ./ALPINELINUX)
+          if [  "$ALPINELINUX_LATEST_VERSION" != "$ALPINELINUX_LOCAL_VERSION" ]; then
+            echo $ALPINELINUX_LATEST_VERSION > ./ALPINELINUX
+            git add ./ALPINELINUX
+            git commit -m "Updated ALPINELINUX at $(date)" -a
+            git push
+          fi
           
     
